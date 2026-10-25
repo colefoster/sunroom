@@ -1,0 +1,21 @@
+{
+  "note": "Initial blind rankings before correcting three A section captures and supplementing both mobile control-panel views. Source and behavior receipts did not change.",
+  "astra": {
+    "ranking": [
+      "B",
+      "A"
+    ],
+    "A": 85.9,
+    "B": 87.2,
+    "confidence": "medium"
+  },
+  "opus": {
+    "ranking": [
+      "A",
+      "B"
+    ],
+    "A": 83.75,
+    "B": 80.5,
+    "confidence": "medium"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-25",
+  "candidate_mapping": {
+    "A": {
+      "name": "Safelight",
+      "creator": "Claude Opus 5.5",
+      "source": "../site-opus/dist",
+      "commit": "728ab07"
+    },
+    "B": {
+      "name": "Sunroom",
+      "creator": "Current Astra-led version with user-directed refinements",
+      "source": "../site/dist",
+      "commit": "6e80a1f"
+    }
+  },
+  "weights": {
+    "product_clarity": 25,
+    "interaction": 30,
+    "visual_craft": 25,
+    "responsive_accessibility": 15,
+    "conversion_trust": 5
+  },
+  "judges": {
+    "Astra": {
+      "model": "gpt-6-astra",
+      "reading_order": [
+        "A",
+        "B"
+      ],
+      "ranking": [
+        "B",
+        "A"
+      ],
+      "confidence": "medium",
+      "A": {
+        "criteria": [
+          9.5,
+          8.8,
+          7.8,
+          7.8,
+          9.0
+        ],
+        "total": 85.9
+      },
+      "B": {
+        "criteria": [
+          8.8,
+          8.5,
+          9.3,
+          8.3,
+          8.0
+        ],
+        "total": 87.2
+      }
+    },
+    "Opus": {
+      "model": "claude-opus-5-5",
+      "reading_order": [
+        "B",
+        "A"
+      ],
+      "ranking": [
+        "A",
+        "B"
+      ],
+      "confidence": "medium",
+      "A": {
+        "criteria": [
+          9.0,
+          8.5,
+          8.0,
+          8.0,
+          9.0
+        ],
+        "total": 84.5
+      },
+      "B": {
+        "criteria": [
+          8.0,
+          8.0,
+          8.5,
+          7.5,
+          8.0
+        ],
+        "total": 80.5
+      }
+    }
+  },
+  "result": "Split vote, one judge each. No automatic replacement or combined-winner declaration."
+}
