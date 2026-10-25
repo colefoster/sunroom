@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Safelight — shade the one bright window on your Mac</title>
+<meta name="description" content="Safelight is a small macOS menu-bar app: a translucent rectangle you place by hand over a light-mode screen share, so the rest of your dark setup stays untouched.">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#0d0b0a">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/archivo-vf.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<!--
+THESIS: A darkroom printer dodges one area of a print by hand. Safelight is that card for the one bright shared window; it refuses the gradient-hero-plus-feature-cards page and leads with the rectangle itself, working.
+OWN-WORLD: Safelight-lit darkroom. Warm black ground that the demo desktop shares, safelight amber as the only ink and as a full-field build section, photographic-paper white only where glare lives. Condensed Archivo caps like a paper-box label; state shown by marks (title bar, corner, outline), not hue.
+STORY: Visitor sees a dark desktop with one glaring share, drags and locks the tint, clicks through it, tests strengths, then builds it in Xcode.
+FIRST VIEWPORT: Compact condensed headline and build CTA across the top; below, a 16:10 dark desktop with a Zoom-style share (~1/3) under an unlocked, offset tint; native-style popover controls to its right.
+FORM: Darkroom dodging and test strips, #3 of 7; seed c42fa62a.
+FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+-->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <defs>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4.2" fill="currentColor"/><g stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></g></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></g></symbol>
+    <symbol id="i-unlock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 7.6-1.7"/></g></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 12S6 5.5 12 5.5 21.5 12 21.5 12 18 18.5 12 18.5 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.8"/></g></symbol>
+    <symbol id="i-corner" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 9 9 20M20 14.5 14.5 20M20 4 4 20"/></g></symbol>
+    <symbol id="i-github" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.2a10 10 0 0 0-3.2 19.5c.5.1.7-.2.7-.5v-1.8c-2.8.6-3.4-1.2-3.4-1.2-.5-1.2-1.1-1.5-1.1-1.5-.9-.6.1-.6.1-.6 1 .1 1.5 1 1.5 1 .9 1.5 2.4 1.1 2.9.8.1-.7.4-1.1.6-1.3-2.2-.3-4.6-1.1-4.6-5 0-1.1.4-2 1-2.7-.1-.2-.4-1.3.1-2.7 0 0 .8-.3 2.8 1a9.6 9.6 0 0 1 5 0c1.9-1.3 2.8-1 2.8-1 .5 1.4.2 2.5.1 2.7.6.7 1 1.6 1 2.7 0 3.9-2.4 4.7-4.6 5 .4.3.7.9.7 1.9v2.8c0 .3.2.6.7.5A10 10 0 0 0 12 2.2z"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8.5" y="8.5" width="11.5" height="11.5" rx="2"/><path d="M15.5 8.5V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v7.5a2 2 0 0 0 2 2h2.5"/></g></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></g></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="6.5" width="12.5" height="11" rx="2"/><path d="m15.5 10.5 5.5-3v9l-5.5-3z"/></g></symbol>
+    <symbol id="i-share" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="18" height="13" rx="2"/><path d="M12 14V8.5M9.5 11 12 8.5l2.5 2.5M8 20.5h8"/></g></symbol>
+    <symbol id="i-people" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8.5" r="3.2"/><path d="M3.5 19a5.5 5.5 0 0 1 11 0M16 5.6a3.2 3.2 0 0 1 0 5.8M17.5 14.2A5.5 5.5 0 0 1 20.5 19"/></g></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m7 9.5 5 5 5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9.5a13 13 0 0 1 18 0M6.3 13a8.2 8.2 0 0 1 11.4 0M9.6 16.4a3.4 3.4 0 0 1 4.8 0"/></g><circle cx="12" cy="19.5" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap top-row">
+    <a class="mark" href="#" aria-label="Safelight home">
+      <svg class="mark-glyph" viewBox="0 0 32 32" aria-hidden="true"><rect x="3" y="6" width="26" height="20" rx="1.5" fill="currentColor" fill-opacity=".9"/><rect x="3" y="6" width="26" height="4.5" fill="#0d0b0a" fill-opacity=".5"/><path d="M21.5 23.5l5-5M25 23.5l1.5-1.5" stroke="#0d0b0a" stroke-width="1.7" stroke-linecap="round"/></svg>
+      <span>Safelight</span>
+    </a>
+    <nav class="top-nav" aria-label="Page">
+      <a href="#how">How it works</a>
+      <a href="#strip">Test strip</a>
+      <a href="#build">Build it</a>
+      <a class="top-gh" href="https://github.com/colefoster/Sunglasses"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg><span>GitHub</span></a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="wrap">
+    <div class="hero-copy">
+      <h1 id="hero-title">Shade their screen&nbsp;share. <span>Keep your dark&nbsp;mode.</span></h1>
+      <div class="hero-side">
+        <p class="lede">Safelight is a translucent rectangle for your Mac. Put it by hand over the light-mode screen someone is sharing on Zoom or Teams. Your terminal, browser and every other dark app stay exactly as they are.</p>
+        <div class="cta-row">
+          <a class="btn btn-amber" href="#build">Build it in Xcode</a>
+          <a class="btn btn-quiet" href="https://github.com/colefoster/Sunglasses"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>Source on GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="rig" data-rig="hero">
+      <div class="rig-stage">
+        <p class="rig-hint" id="hero-hint">Drag the tint’s title bar, pull its corner, then lock it and click <em>View Options</em> through it.</p>
+        <div class="scene-frame">
+          <div class="scene scene-hero" role="group" aria-label="Demo: a dark Mac desktop with a bright screen share on a video call" aria-describedby="hero-hint">
+
+            <div class="menubar">
+              <span class="mb-app">Meeting</span><span>View</span><span>Window</span><span class="mb-hide">Help</span>
+              <span class="mb-right">
+                <button class="mb-icon" type="button" data-menubar aria-label="Safelight menu-bar icon: jump to controls"><svg aria-hidden="true"><use href="#i-sun"/></svg></button>
+                <svg class="mb-glyph" aria-hidden="true"><use href="#i-wifi"/></svg>
+                <span class="mb-clock">Tue 10:46</span>
+              </span>
+            </div>
+
+            <div class="win win-term" aria-hidden="true">
+              <div class="win-bar"><i></i><i></i><i></i><b>~/dev/api — zsh</b></div>
+              <pre class="term-body"><span class="t-dim">~/dev/api</span> <span class="t-amb">main</span> $ npm test
+<span class="t-ok">PASS</span> src/routes/auth.test.ts
+<span class="t-ok">PASS</span> src/routes/billing.test.ts
+<span class="t-ok">PASS</span> src/jobs/digest.test.ts
+Tests:  48 passed, 48 total
+Time:   3.1 s
+<span class="t-dim">~/dev/api</span> <span class="t-amb">main</span> $ git status
+On branch main
+nothing to commit, working tree clean
+<span class="t-dim">~/dev/api</span> <span class="t-amb">main</span> $ <span class="t-caret"></span></pre>
+            </div>
+
+            <div class="win win-browser" aria-hidden="true">
+              <div class="win-bar"><i></i><i></i><i></i><span class="url">docs.example.dev/guides/webhooks</span></div>
+              <div class="br-body">
+                <p class="br-h">Retrying webhooks</p>
+                <p>Failed deliveries back off for up to 24 hours. Each attempt carries the same event id.</p>
+                <p class="br-code">POST /v1/events/:id/retry</p>
+                <p>Return a 2xx within ten seconds or the attempt counts as failed.</p>
+              </div>
+            </div>
+
+            <div class="win win-call">
+              <div class="win-bar"><i></i><i></i><i></i><b>Weekly launch sync</b></div>
+              <div class="share">
+                <div class="share-banner">
+                  <span class="share-who">You’re viewing Priya’s screen</span>
+                  <span class="vo">
+                    <button class="vo-btn" type="button" data-target aria-haspopup="true" aria-expanded="false">View Options<svg aria-hidden="true"><use href="#i-chevron"/></svg></button>
+                    <span class="vo-menu" role="menu" hidden>
+                      <button type="button" role="menuitemradio" aria-checked="true" data-vo="Fit to window">Fit to window</button>
+                      <button type="button" role="menuitemradio" aria-checked="false" data-vo="Original size">Original size</button>
+                      <button type="button" role="menuitemradio" aria-checked="false" data-vo="Side-by-side">Side-by-side</button>
+                    </span>
+                  </span>
+                </div>
+                <div class="doc" aria-hidden="true">
+                  <div class="doc-chrome"><span class="doc-title">Q4 launch plan</span><span class="doc-tools"><i></i><i></i><i></i><i></i><i></i></span><span class="doc-shareb">Share</span></div>
+                  <div class="doc-page">
+                    <p class="doc-h">Launch checklist</p>
+                    <p class="doc-p">Owners confirm each line by Thursday. Anything still open moves to the November train.</p>
+                    <div class="doc-table">
+                      <span class="th">Item</span><span class="th">Owner</span><span class="th">Status</span>
+                      <span>Pricing page copy</span><span>Marco</span><span class="pill">Review</span>
+                      <span>Migration guide</span><span>Priya</span><span class="pill ok">Done</span>
+                      <span>Status-page incident drill</span><span>Dee</span><span class="pill">Draft</span>
+                      <span>Support macros</span><span>Sam</span><span class="pill ok">Done</span>
+                    </div>
+                    <p class="doc-p doc-hide-sm">Open questions go in the comments, not the chat.</p>
+                  </div>
+                </div>
+              </div>
+              <div class="tiles" aria-hidden="true">
+                <span class="tile"><b>PR</b><em>Priya</em></span>
+                <span class="tile"><b>MO</b><em>Marco</em></span>
+                <span class="tile"><b>DK</b><em>Dee</em></span>
+                <span class="tile tile-you"><b>You</b><em>You</em></span>
+              </div>
+              <div class="callbar" aria-hidden="true">
+                <span><svg><use href="#i-mic"/></svg>Mute</span>
+                <span><svg><use href="#i-video"/></svg>Video</span>
+                <span class="cb-hide"><svg><use href="#i-people"/></svg>People</span>
+                <span><svg><use href="#i-share"/></svg>Share</span>
+                <span class="cb-leave">Leave</span>
+              </div>
+            </div>
+
+            <div class="tint" data-tint>
+              <div class="tint-bar" tabindex="0" role="button" aria-roledescription="title bar" aria-label="Move the tint. Drag, or use arrow keys; hold Shift for bigger steps.">
+                <svg aria-hidden="true"><use href="#i-sun"/></svg><span>Safelight — drag here, lock when done</span>
+              </div>
+              <div class="tint-corner" tabindex="0" role="button" aria-roledescription="resize corner" aria-label="Resize the tint. Drag, or use arrow keys; hold Shift for bigger steps."><svg aria-hidden="true"><use href="#i-corner"/></svg></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="rig-panel" data-panel aria-label="Safelight controls for the call demo"></div>
+    </div>
+  </div>
+</section>
+
+<section class="how" id="how" aria-labelledby="how-title">
+  <div class="wrap how-grid">
+    <div class="how-intro">
+      <h2 id="how-title">Hold back the light, by&nbsp;hand.</h2>
+      <p>In a darkroom you dodge a print by holding a card over the one patch that’s getting too much light. Safelight works the same way. It doesn’t know what Zoom is and doesn’t read your screen. It’s a coloured pane you place where the glare is.</p>
+      <p>That means it stays put. If the share moves or you resize the call, move the tint too. It takes a few seconds, and nothing else on your screen gets touched.</p>
+    </div>
+    <dl class="states">
+      <div class="state">
+        <dt><svg class="ic" aria-hidden="true"><use href="#i-eye"/></svg>Show and hide</dt>
+        <dd>The switch at the top of the menu takes the tint away and brings it back. Its size and position are kept, so it returns exactly where you left it.</dd>
+      </div>
+      <div class="state">
+        <dt><svg class="ic" aria-hidden="true"><use href="#i-unlock"/></svg>Move &amp; Resize</dt>
+        <dd>Unlocking gives the tint a title bar to drag and edges to pull. While it’s unlocked it catches your clicks, the way any window would.</dd>
+      </div>
+      <div class="state">
+        <dt><svg class="ic" aria-hidden="true"><use href="#i-lock"/></svg>Done Moving</dt>
+        <dd>Locking removes the handles and lets every click pass straight through to the app underneath. You keep working; the tint just sits on top.</dd>
+      </div>
+      <div class="state">
+        <dt><svg class="ic" aria-hidden="true"><use href="#i-sun"/></svg>Stays out of the way</dt>
+        <dd>It lives in the menu bar with no Dock icon. It can float above other windows, follows you across Spaces, and remembers tint and placement between launches.</dd>
+      </div>
+    </dl>
+  </div>
+</section>
+
+<section class="strip-sec" id="strip" aria-labelledby="strip-title">
+  <div class="wrap">
+    <div class="strip-head">
+      <h2 id="strip-title">Make a test strip.</h2>
+      <p>Printers expose a strip in steps to find the right time. Do the same with opacity: anywhere from 5% to 80%, in any colour, with Amber, Blue and Gray presets to start from. This second demo has its own controls and remembers its own settings.</p>
+    </div>
+
+    <div class="rig rig-b" data-rig="slides">
+      <div class="rig-stage">
+        <div class="scene-frame">
+          <div class="scene scene-slides" role="group" aria-label="Demo: a dark editor next to a bright slide being presented in a Teams-style call">
+            <div class="menubar">
+              <span class="mb-app">Meetings</span><span>Edit</span><span>View</span>
+              <span class="mb-right">
+                <button class="mb-icon" type="button" data-menubar aria-label="Safelight menu-bar icon: jump to controls"><svg aria-hidden="true"><use href="#i-sun"/></svg></button>
+                <span class="mb-clock">Tue 14:02</span>
+              </span>
+            </div>
+
+            <div class="win win-editor" aria-hidden="true">
+              <div class="win-bar"><i></i><i></i><i></i><b>retry.swift</b></div>
+              <pre class="ed-body"><span class="t-dim"> 1</span>  <span class="k">func</span> backoff(attempt: <span class="ty">Int</span>) -&gt; <span class="ty">Duration</span> {
+<span class="t-dim"> 2</span>      <span class="k">let</span> base = <span class="n">0.5</span>
+<span class="t-dim"> 3</span>      <span class="k">let</span> cap = <span class="n">60.0</span>
+<span class="t-dim"> 4</span>      <span class="k">let</span> wait = min(cap, base * pow(<span class="n">2</span>, <span class="ty">Double</span>(attempt)))
+<span class="t-dim"> 5</span>      <span class="k">return</span> .seconds(wait)
+<span class="t-dim"> 6</span>  }
+<span class="t-dim"> 7</span>
+<span class="t-dim"> 8</span>  <span class="c">// jitter lands in the next PR</span></pre>
+            </div>
+
+            <div class="win win-meet">
+              <div class="win-bar"><i></i><i></i><i></i><b>Design review</b></div>
+              <div class="meet-rail" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+              <div class="share share-slide">
+                <div class="share-banner">
+                  <span class="share-who">Dee is presenting</span>
+                  <button class="rc-btn" type="button" data-target aria-pressed="false">Request control</button>
+                </div>
+                <div class="slide" aria-hidden="true">
+                  <p class="sl-h">Roadmap, first half</p>
+                  <div class="sl-cols">
+                    <ul>
+                      <li>Offline drafts</li>
+                      <li>Shared templates</li>
+                      <li>Audit log export</li>
+                    </ul>
+                    <div class="sl-bars"><i style="--v:.55"></i><i style="--v:.8"></i><i style="--v:.4"></i><i style="--v:.95"></i><i style="--v:.65"></i></div>
+                  </div>
+                  <p class="sl-foot">Illustrative slide</p>
+                </div>
+              </div>
+              <div class="meet-people" aria-hidden="true">
+                <span class="tile"><b>DK</b><em>Dee</em></span>
+                <span class="tile"><b>JL</b><em>Jun</em></span>
+                <span class="tile tile-you"><b>You</b><em>You</em></span>
+              </div>
+            </div>
+
+            <div class="tint" data-tint>
+              <div class="tint-bar" tabindex="0" role="button" aria-roledescription="title bar" aria-label="Move the tint. Drag, or use arrow keys; hold Shift for bigger steps.">
+                <svg aria-hidden="true"><use href="#i-sun"/></svg><span>Safelight — drag here, lock when done</span>
+              </div>
+              <div class="tint-corner" tabindex="0" role="button" aria-roledescription="resize corner" aria-label="Resize the tint. Drag, or use arrow keys; hold Shift for bigger steps."><svg aria-hidden="true"><use href="#i-corner"/></svg></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="teststrip" data-strip role="group" aria-label="Test strip: set this demo’s opacity">
+          <!-- bands rendered by app.js -->
+        </div>
+      </div>
+      <div class="rig-panel" data-panel aria-label="Safelight controls for the slide demo"></div>
+    </div>
+  </div>
+</section>
+
+<section class="honest" aria-labelledby="honest-title">
+  <div class="wrap honest-grid">
+    <h2 id="honest-title">A rectangle, and nothing&nbsp;cleverer.</h2>
+    <div class="honest-cols">
+      <div>
+        <h3>What it does</h3>
+        <ul class="ticks">
+          <li>Draws one translucent coloured rectangle, wherever you put it.</li>
+          <li>Lets you pick any colour, and opacity from 5% to 80%.</li>
+          <li>Shows and hides without forgetting its place.</li>
+          <li>Passes clicks through when locked.</li>
+          <li>Saves tint, position and size locally on your Mac.</li>
+        </ul>
+      </div>
+      <div>
+        <h3>What it doesn’t</h3>
+        <ul class="ticks ticks-no">
+          <li>Convert light apps to dark mode.</li>
+          <li>Find, track or snap to the shared window.</li>
+          <li>Read, record or upload anything on your screen.</li>
+          <li>Change your display brightness or colour settings.</li>
+          <li>Need an account. There isn’t one.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="build" id="build" aria-labelledby="build-title">
+  <div class="wrap build-grid">
+    <div class="build-main">
+      <h2 id="build-title">Build it in Xcode.</h2>
+      <p class="build-lede">There’s no signed download yet. Safelight is a single SwiftUI file you build and run yourself; the source lives in the <strong>Sunglasses</strong> repository, which is its working name.</p>
+      <ol class="steps">
+        <li>
+          <p>Clone the source.</p>
+          <div class="cmd">
+            <code id="clone-cmd">git clone https://github.com/colefoster/Sunglasses.git</code>
+            <button class="copy" type="button" data-copy="#clone-cmd"><svg class="ic" aria-hidden="true"><use href="#i-copy"/></svg><span>Copy</span></button>
+          </div>
+        </li>
+        <li>
+          <p>Open it in Xcode. If you only have <code>SunglassesApp.swift</code>, create a new macOS App project and use that file as the app’s entry point.</p>
+        </li>
+        <li>
+          <p>Choose <strong>My Mac</strong> as the run destination and press <kbd>⌘</kbd><kbd>R</kbd>. A sun icon appears in the menu bar; there’s no Dock icon.</p>
+        </li>
+        <li>
+          <p>Click the icon, choose <strong>Move &amp; Resize</strong>, drag the tint over the bright share, then click the icon again and choose <strong>Done Moving</strong>.</p>
+        </li>
+      </ol>
+      <p class="build-note">The current source uses the macOS 14 form of SwiftUI’s <code>onChange</code>. If Xcode refuses to build for a macOS 13 target, raise the deployment target to 14 or adjust those calls.</p>
+      <a class="btn btn-ink" href="https://github.com/colefoster/Sunglasses"><svg class="ic" aria-hidden="true"><use href="#i-github"/></svg>github.com/colefoster/Sunglasses</a>
+    </div>
+
+    <aside class="label" aria-labelledby="label-title">
+      <p class="label-name" id="label-title">Safelight</p>
+      <p class="label-sub">Menu-bar screen tint for macOS</p>
+      <dl class="label-rows">
+        <div><dt>Requires</dt><dd>macOS 13 or later</dd></div>
+        <div><dt>Built with</dt><dd>SwiftUI and AppKit</dd></div>
+        <div><dt>Lives in</dt><dd>The menu bar, no Dock icon</dd></div>
+        <div><dt>Opacity</dt><dd class="num">5–80%</dd></div>
+        <div><dt>Presets</dt><dd>Amber 30% · Blue 25% · Gray 35%</dd></div>
+        <div><dt>First launch</dt><dd class="num">RGB .15 / .10 / .00 at 30%</dd></div>
+        <div><dt>Layering</dt><dd>Always on top (switchable), on every Space</dd></div>
+        <div><dt>Remembers</dt><dd>Colour, opacity, position and size, on this Mac</dd></div>
+      </dl>
+    </aside>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap foot-row">
+    <p>Safelight is the working name for the open-source <a href="https://github.com/colefoster/Sunglasses">Sunglasses</a> app; the menu shows “Sunglasses” for now.</p>
+    <p>Demo scenes on this page are illustrative. Zoom and Microsoft Teams are trademarks of their owners; Safelight isn’t affiliated with either.</p>
+  </div>
+</footer>
+
+<script src="app.js" defer></script>
+</body>
+</html>
