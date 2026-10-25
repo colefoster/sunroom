@@ -2,3 +2,5 @@
 Warm technical domesticity: dark graphite canvas, warm off-white type, terracotta actions and honey tint. Big geometric lowercase wordmark; high-contrast short headlines. An interactive miniature desktop is the main visual, not decorative photography. Thin ruled sections and a generous unboxed layout. Product truth controls all prose. No eyewear imagery. Native app untouched. Mode: Persuade. The web demo explicitly models the native app; it does not control the user's display. Local fonts and assets, no dependencies.
 
 Both the hero and playground show a bright shared window occupying roughly one-third of the desktop area, surrounded by a dark browser and terminal. The workspace canvas matches the page background. Dark mode is the default throughout, including controls and setup instructions. The hero toolbar opens native-style settings; its popover must remain above following sections. All overlay controls use the same per-instance behavior.
+
+Make the overlay visibly independent: a contrasting title bar and resize handle while unlocked, offset from the shared window with a different width and height. Both demos expose Show and Lock as separate controls.

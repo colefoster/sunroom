@@ -180,3 +180,32 @@ dialog code { color: var(--ink); }
 .hero-art .browser-document h3 { margin: 7px 0; }
 .hero-art .dark-document-lines { display: none; }
 @media(max-width:700px) { .hero { gap: 45px; } .hero-art .browser-document { padding: 12px 8px; } }
+
+/* A manually placed overlay, deliberately offset from the shared window. */
+.hero-art .hero-tint, .desktop .tint {
+  left: 44%; top: 91px; width: 48%; height: calc(100% - 152px);
+  outline: 1px solid #edbc8970;
+}
+.tint.moving { outline: 2px solid #e5b780; }
+.drag-handle, #drag-handle { height: 28px; font-size: 9px; background: #443827; color: #fff0d9; }
+.resize-handle, #resize-handle { background: #e5b780; color: #211d16; }
+.hero-toolbar { display: block; padding: 11px 12px; }
+.hero-primary-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.quick-setting { display: flex; align-items: center; gap: 7px; font-size: 10px; }
+.quick-setting .toggle { flex-shrink: 0; }
+.hero-opacity { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+.hero-opacity > label { font-size: 10px; }
+.hero-opacity input[type=range] { min-width: 0; flex: 1; }
+.hero-opacity > output { min-width: 29px; }
+.hero-control-panel .control-title { padding-bottom: 12px; }
+.box-toggle-row { display: flex; align-items: center; justify-content: space-between; gap: 15px; margin-top: 17px; font-size: 12px; }
+.box-mode-hint { border-bottom: 1px solid var(--line); padding-bottom: 16px; margin: 15px 0 0; }
+.hero-control-panel .control-section { margin-top: 17px; }
+@media(max-width:700px) {
+  .hero-primary-controls { gap: 9px; }
+  .quick-setting { gap: 5px; font-size: 10px; }
+  .hero-settings-button { font-size: 9px; }
+  .hero-settings-button svg { width: 18px; height: 18px; }
+  .hero-art .hero-tint, .desktop .tint { left: 43%; width: 49%; top: 91px; height: calc(100% - 152px); }
+  .hero-tint .drag-handle { font-size: 8px; padding: 0 6px; }
+}

@@ -3,4 +3,6 @@ Marketing identity for the existing Sunglasses macOS application. Native app nam
 
 Primary motivation: the user runs dark mode everywhere, but cannot control the light-mode screen someone else shares during a call. Lead with shading the shared window while keeping the rest of the Mac unchanged. Every tint illustration is a working, independent web demo with color, opacity, on/off, pinning, move/resize and locally remembered settings.
 
-The page defaults to dark mode. Demo shared screens occupy roughly one-third of each scene, with the remaining area showing a dark browser and terminal. The tint initially covers only the bright shared content.
+The page defaults to dark mode. Demo shared screens occupy roughly one-third of each scene, with the remaining area showing a dark browser and terminal. The tint starts as an offset, differently sized rectangle that overlaps both the shared content and part of the surrounding desktop. It never snaps to or tracks a window.
+
+Overlay interaction follows the native separation: visibility is independent of whether the box intercepts mouse events. The website labels this as Show box and Lock box. Locked means clicks pass through; unlocked shows a draggable title bar and resize corner. Demo boxes start unlocked so manual positioning is apparent. Native app code and launch behavior are unchanged.

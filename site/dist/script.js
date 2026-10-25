@@ -11,19 +11,21 @@ function initTintDemo(root) {
   const tint = root.querySelector('[data-tint]');
   const panel = root.querySelector('[data-controls]');
   const check = root.querySelector('[data-action="check"]');
-  const storageKey = `sunroom-demo-${name}-v2`;
-  const initial = { ...presets.amber, enabled: true, pinned: true, rect: null };
+  const storageKey = `sunroom-demo-${name}-v3`;
+  const initial = { color: '#261a00', opacity: 30, enabled: true, pinned: true, rect: null };
   let state = { ...initial };
-  let moving = false;
+  // Start examples unlocked so the independent box and its handles are immediately visible.
+  let moving = true;
 
   panel.innerHTML = `
-    <div class="control-title"><svg aria-hidden="true"><use href="#sun"/></svg><h3>Your little sunroom</h3><button class="toggle" data-action="enabled" role="switch" aria-checked="true" aria-label="Enable ${name} tint"><span></span></button></div>
+    <div class="control-title"><svg aria-hidden="true"><use href="#sun"/></svg><h3>Tint box</h3></div>
+    <div class="box-toggle-row"><span>Show box</span><button class="toggle" data-action="enabled" role="switch" aria-checked="true" aria-label="Show ${name} box"><span></span></button></div>
+    <div class="box-toggle-row"><span>Lock box</span><button class="toggle" data-action="lock" role="switch" aria-checked="false" aria-label="Lock ${name} box"><span></span></button></div>
+    <p class="control-hint box-mode-hint" data-hint>Unlocked — drag the top bar or resize the corner.</p>
     <div class="control-section"><label class="range-label" for="${name}-opacity">Opacity <output data-opacity-output>30%</output></label><input id="${name}-opacity" data-control="opacity" type="range" min="5" max="80" value="30"><div class="range-ends"><span>A little</span><span>A lot</span></div></div>
     <fieldset class="presets"><legend>Pick a mood</legend>${Object.keys(presets).map(key => `<button data-preset="${key}" class="preset" aria-pressed="${key === 'amber'}"><i></i>${key[0].toUpperCase() + key.slice(1)}</button>`).join('')}</fieldset>
     <label class="custom-color">Or choose your own <input type="color" data-control="color" value="#331f00" aria-label="${name} custom tint color"></label>
     <label class="pin-control"><input type="checkbox" data-control="pinned" checked>Always on top</label>
-    <button class="move-button" data-action="move" aria-pressed="false"><span>Move & resize</span><svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 9V4h5m6 0h5v5M4 15v5h5m6 0h5v-5"/></svg></button>
-    <p class="control-hint" data-hint>Your mouse works through the tint. Switch to move mode to put it somewhere new.</p>
     <button class="reset" data-action="reset">Reset demo</button><div class="sr-only" role="status" data-status></div>`;
 
   // Store proportions so a saved region still fits after changing device sizes.
@@ -70,12 +72,12 @@ function initTintDemo(root) {
       button.classList.toggle('active', active);
       button.setAttribute('aria-pressed', String(active));
     });
-    const move = panel.querySelector('[data-action="move"]');
-    move.setAttribute('aria-pressed', String(moving));
-    move.querySelector('span').textContent = moving ? 'Done moving' : 'Move & resize';
-    panel.querySelector('[data-hint]').textContent = moving
-      ? 'Drag the top edge to move, or the corner to resize. Focus either handle and use arrow keys; hold Shift for larger steps.'
-      : 'Your mouse works through the tint. Switch to move mode to put it somewhere new.';
+    root.querySelectorAll('[data-action="lock"]').forEach(button => button.setAttribute('aria-checked', String(!moving)));
+    panel.querySelector('[data-hint]').textContent = !state.enabled
+      ? 'Hidden — your size, position, and lock mode are kept. Turn Show box on to bring it back.'
+      : moving
+      ? 'Unlocked — drag the top bar or resize the corner. Lock the box when you want clicks to pass through.'
+      : 'Locked — clicks pass through the box. Unlock it to adjust its position and size.';
     persist();
   }
 
@@ -112,22 +114,21 @@ function initTintDemo(root) {
   }));
   root.querySelectorAll('[data-action="enabled"]').forEach(button => button.addEventListener('click', () => {
     state.enabled = !state.enabled;
-    if (!state.enabled) moving = false;
     render();
   }));
   root.querySelector('[data-action="settings"]').addEventListener('click', event => {
     panel.hidden = !panel.hidden;
     event.currentTarget.setAttribute('aria-expanded', String(!panel.hidden));
   });
-  panel.querySelector('[data-action="move"]').addEventListener('click', () => {
+  root.querySelectorAll('[data-action="lock"]').forEach(button => button.addEventListener('click', () => {
     moving = !moving;
-    if (moving) state.enabled = true;
     render();
-  });
+    announce(moving ? 'Box unlocked. Drag its top bar or resize its corner.' : 'Box locked. Clicks pass through.');
+  }));
   check.addEventListener('click', () => check.setAttribute('aria-pressed', String(check.getAttribute('aria-pressed') !== 'true')));
   panel.querySelector('[data-action="reset"]').addEventListener('click', () => {
     state = { ...initial };
-    moving = false;
+    moving = true;
     tint.removeAttribute('style');
     check.setAttribute('aria-pressed', 'false');
     render();
