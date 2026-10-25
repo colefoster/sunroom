@@ -11,22 +11,22 @@ function initTintDemo(root) {
   const tint = root.querySelector('[data-tint]');
   const panel = root.querySelector('[data-controls]');
   const check = root.querySelector('[data-action="check"]');
+  const feedback = root.closest('section').querySelector('[data-feedback]');
   const storageKey = `sunroom-demo-${name}-v3`;
-  const initial = { color: '#261a00', opacity: 30, enabled: true, pinned: true, rect: null };
+  const initial = { color: '#261a00', opacity: 30, enabled: true, locked: false, rect: null };
   let state = { ...initial };
-  // Start examples unlocked so the independent box and its handles are immediately visible.
-  let moving = true;
 
   panel.innerHTML = `
-    <div class="control-title"><svg aria-hidden="true"><use href="#sun"/></svg><h3>Tint box</h3></div>
-    <div class="box-toggle-row"><span>Show box</span><button class="toggle" data-action="enabled" role="switch" aria-checked="true" aria-label="Show ${name} box"><span></span></button></div>
-    <div class="box-toggle-row"><span>Lock box</span><button class="toggle" data-action="lock" role="switch" aria-checked="false" aria-label="Lock ${name} box"><span></span></button></div>
-    <p class="control-hint box-mode-hint" data-hint>Unlocked — drag the top bar or resize the corner.</p>
-    <div class="control-section"><label class="range-label" for="${name}-opacity">Opacity <output data-opacity-output>30%</output></label><input id="${name}-opacity" data-control="opacity" type="range" min="5" max="80" value="30"><div class="range-ends"><span>A little</span><span>A lot</span></div></div>
-    <fieldset class="presets"><legend>Pick a mood</legend>${Object.keys(presets).map(key => `<button data-preset="${key}" class="preset" aria-pressed="${key === 'amber'}"><i></i>${key[0].toUpperCase() + key.slice(1)}</button>`).join('')}</fieldset>
-    <label class="custom-color">Or choose your own <input type="color" data-control="color" value="#331f00" aria-label="${name} custom tint color"></label>
-    <label class="pin-control"><input type="checkbox" data-control="pinned" checked>Always on top</label>
-    <button class="reset" data-action="reset">Reset demo</button><div class="sr-only" role="status" data-status></div>`;
+    <div class="control-title"><h3><svg aria-hidden="true"><use href="#sun"/></svg>Tint box</h3><span class="show-control"><span>Show</span><button class="toggle" data-action="enabled" role="switch" aria-checked="true" aria-label="Show tint box"><span></span></button></span></div>
+    <fieldset class="mode-group"><legend>Box mode</legend>
+      <button class="mode-choice" data-mode="unlocked" aria-pressed="true"><span><svg aria-hidden="true"><use href="#unlock"/></svg>Unlocked</span><small>Move &amp; resize</small></button>
+      <button class="mode-choice" data-mode="locked" aria-pressed="false"><span><svg aria-hidden="true"><use href="#lock"/></svg>Locked</span><small>Click through</small></button>
+    </fieldset>
+    <p class="control-hint" data-hint>Drag the top bar or resize the corner. Lock when you’re done.</p>
+    <div class="control-section"><label class="range-label" for="${name}-opacity">Opacity <output data-opacity-output>30%</output></label><input id="${name}-opacity" data-control="opacity" type="range" min="5" max="80" value="30"></div>
+    <fieldset class="presets"><legend>Presets</legend>${Object.keys(presets).map(key => `<button data-preset="${key}" class="preset" aria-pressed="false"><i></i>${key[0].toUpperCase() + key.slice(1)}</button>`).join('')}</fieldset>
+    <label class="custom-color">Tint colour <input type="color" data-control="color" value="#261a00" aria-label="Custom tint colour"></label>
+    <button class="reset" data-action="reset">Reset demo</button>`;
 
   // Store proportions so a saved region still fits after changing device sizes.
   function placeRect(x, y, width, height, save = true) {
@@ -52,32 +52,31 @@ function initTintDemo(root) {
   }
 
   function announce(message) {
-    panel.querySelector('[data-status]').textContent = message;
+    feedback.textContent = message;
   }
 
   function render() {
     root.style.setProperty('--tint', state.color);
     root.style.setProperty('--opacity', state.opacity / 100);
     tint.classList.toggle('off', !state.enabled);
-    tint.classList.toggle('moving', moving && state.enabled);
-    tint.classList.toggle('unpinned', !state.pinned);
+    tint.classList.toggle('moving', !state.locked && state.enabled);
     root.querySelectorAll('[data-action="enabled"]').forEach(button => button.setAttribute('aria-checked', String(state.enabled)));
     root.querySelectorAll('[data-control="opacity"]').forEach(input => { input.value = state.opacity; });
     root.querySelectorAll('[data-opacity-output]').forEach(output => { output.value = `${state.opacity}%`; });
     panel.querySelector('[data-control="color"]').value = state.color;
-    panel.querySelector('[data-control="pinned"]').checked = state.pinned;
     panel.querySelectorAll('[data-preset]').forEach(button => {
       const preset = presets[button.dataset.preset];
       const active = preset.color === state.color && preset.opacity === state.opacity;
       button.classList.toggle('active', active);
       button.setAttribute('aria-pressed', String(active));
     });
-    root.querySelectorAll('[data-action="lock"]').forEach(button => button.setAttribute('aria-checked', String(!moving)));
+    panel.querySelectorAll('[data-mode]').forEach(button => button.setAttribute('aria-pressed', String((button.dataset.mode === 'locked') === state.locked)));
+    tint.setAttribute('aria-hidden', String(!state.enabled || state.locked));
     panel.querySelector('[data-hint]').textContent = !state.enabled
       ? 'Hidden — your size, position, and lock mode are kept. Turn Show box on to bring it back.'
-      : moving
-      ? 'Unlocked — drag the top bar or resize the corner. Lock the box when you want clicks to pass through.'
-      : 'Locked — clicks pass through the box. Unlock it to adjust its position and size.';
+      : state.locked
+      ? 'Clicks pass through. Choose Unlocked to move or resize the box.'
+      : 'Drag the top bar or resize the corner. Lock when you’re done.';
     persist();
   }
 
@@ -88,7 +87,7 @@ function initTintDemo(root) {
         color: saved.color,
         opacity: clamp(saved.opacity, 5, 80),
         enabled: typeof saved.enabled === 'boolean' ? saved.enabled : true,
-        pinned: typeof saved.pinned === 'boolean' ? saved.pinned : true,
+        locked: typeof saved.locked === 'boolean' ? saved.locked : false,
         rect: saved.rect && ['x', 'y', 'width', 'height'].every(key => Number.isFinite(saved.rect[key]) && saved.rect[key] >= 0 && saved.rect[key] <= 1) ? saved.rect : null,
       };
     }
@@ -102,11 +101,6 @@ function initTintDemo(root) {
     state.color = event.target.value;
     render();
   });
-  panel.querySelector('[data-control="pinned"]').addEventListener('change', event => {
-    state.pinned = event.target.checked;
-    render();
-    announce(state.pinned ? 'Tint stays above the floating screen share label.' : 'Tint sits below the floating screen share label.');
-  });
   panel.querySelectorAll('[data-preset]').forEach(button => button.addEventListener('click', () => {
     Object.assign(state, presets[button.dataset.preset]);
     render();
@@ -115,20 +109,30 @@ function initTintDemo(root) {
   root.querySelectorAll('[data-action="enabled"]').forEach(button => button.addEventListener('click', () => {
     state.enabled = !state.enabled;
     render();
+    announce(state.enabled ? 'Box shown. Its position and mode are unchanged.' : 'Box hidden. Size, position and mode are kept.');
   }));
-  root.querySelector('[data-action="settings"]').addEventListener('click', event => {
-    panel.hidden = !panel.hidden;
-    event.currentTarget.setAttribute('aria-expanded', String(!panel.hidden));
+  root.querySelector('[data-action="settings"]').addEventListener('click', () => {
+    panel.querySelector('[data-action="enabled"]').focus();
   });
-  root.querySelectorAll('[data-action="lock"]').forEach(button => button.addEventListener('click', () => {
-    moving = !moving;
+  panel.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => {
+    state.locked = button.dataset.mode === 'locked';
     render();
-    announce(moving ? 'Box unlocked. Drag its top bar or resize its corner.' : 'Box locked. Clicks pass through.');
+    announce(state.locked ? 'Locked. Click “Follow along” through the tint box.' : 'Unlocked. Drag the top bar or resize the corner.');
   }));
-  check.addEventListener('click', () => check.setAttribute('aria-pressed', String(check.getAttribute('aria-pressed') !== 'true')));
+  tint.addEventListener('click', event => {
+    if (!state.locked && !event.target.closest('[data-handle]')) {
+      announce('The unlocked box caught that click. Choose Locked to click through it.');
+    }
+  });
+  check.addEventListener('click', event => {
+    const checked = check.getAttribute('aria-pressed') !== 'true';
+    check.setAttribute('aria-pressed', String(checked));
+    const box = tint.getBoundingClientRect();
+    const through = event.detail > 0 && state.enabled && state.locked && event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom;
+    announce(through ? 'That click passed through the locked tint box.' : checked ? 'Checked. Place the tint over this checkbox and lock it to try click-through.' : 'Checkbox cleared.');
+  });
   panel.querySelector('[data-action="reset"]').addEventListener('click', () => {
     state = { ...initial };
-    moving = true;
     tint.removeAttribute('style');
     check.setAttribute('aria-pressed', 'false');
     render();
@@ -138,12 +142,12 @@ function initTintDemo(root) {
   root.querySelectorAll('[data-handle]').forEach(handle => {
     const resize = handle.dataset.handle === 'resize';
     handle.addEventListener('pointerdown', event => {
-      if (!moving || !state.enabled || !event.isPrimary || event.button !== 0) return;
+      if (state.locked || !state.enabled || !event.isPrimary || event.button !== 0) return;
       event.preventDefault();
       handle.setPointerCapture(event.pointerId);
       const start = { x: event.clientX, y: event.clientY, left: tint.offsetLeft, top: tint.offsetTop, width: tint.offsetWidth, height: tint.offsetHeight };
       const move = next => {
-        if (!moving || !state.enabled) return;
+        if (state.locked || !state.enabled) return;
         const dx = next.clientX - start.x;
         const dy = next.clientY - start.y;
         placeRect(resize ? start.left : start.left + dx, resize ? start.top : start.top + dy, resize ? start.width + dx : start.width, resize ? start.height + dy : start.height);
@@ -161,7 +165,7 @@ function initTintDemo(root) {
       handle.addEventListener('lostpointercapture', end);
     });
     handle.addEventListener('keydown', event => {
-      if (!moving || !state.enabled) return;
+      if (state.locked || !state.enabled) return;
       const deltas = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] };
       if (!deltas[event.key]) return;
       event.preventDefault();
@@ -172,31 +176,25 @@ function initTintDemo(root) {
     });
   });
 
-  if (name === 'hero') {
-    document.addEventListener('pointerdown', event => {
-      if (panel.hidden || panel.contains(event.target) || root.querySelector('[data-action="settings"]').contains(event.target)) return;
-      panel.hidden = true;
-      root.querySelector('[data-action="settings"]').setAttribute('aria-expanded', 'false');
-    });
-    root.addEventListener('keydown', event => {
-      if (event.key === 'Escape' && !panel.hidden) {
-        panel.hidden = true;
-        const button = root.querySelector('[data-action="settings"]');
-        button.setAttribute('aria-expanded', 'false');
-        button.focus();
-      }
-    });
-  }
   new ResizeObserver(restoreRect).observe(stage);
   restoreRect();
   render();
 }
 
 document.querySelectorAll('[data-demo]').forEach(initTintDemo);
-const dialog = document.querySelector('#install-dialog');
-document.querySelectorAll('.install').forEach(button => button.addEventListener('click', () => dialog.showModal()));
-document.querySelector('#close-dialog').addEventListener('click', () => dialog.close());
-dialog.addEventListener('click', event => {
-  const rect = dialog.getBoundingClientRect();
-  if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+const copyButton = document.querySelector('[data-copy]');
+copyButton.addEventListener('click', async () => {
+  const command = document.querySelector('#clone-command');
+  try {
+    await navigator.clipboard.writeText(command.textContent.trim());
+    copyButton.textContent = 'Copied';
+  } catch {
+    const range = document.createRange();
+    range.selectNodeContents(command);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+    copyButton.textContent = 'Press ⌘C';
+  }
+  setTimeout(() => { copyButton.textContent = 'Copy'; }, 1800);
 });
