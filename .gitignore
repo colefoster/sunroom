@@ -3,3 +3,6 @@ Sunglasses.app/
 .DS_Store
 build/
 *.swp
+**/bin/
+**/obj/
+windows/artifacts/
