@@ -11,7 +11,7 @@ function initTintDemo(root) {
   const tint = root.querySelector('[data-tint]');
   const panel = root.querySelector('[data-controls]');
   const check = root.querySelector('[data-action="check"]');
-  const storageKey = `sunroom-demo-${name}-v1`;
+  const storageKey = `sunroom-demo-${name}-v2`;
   const initial = { ...presets.amber, enabled: true, pinned: true, rect: null };
   let state = { ...initial };
   let moving = false;
