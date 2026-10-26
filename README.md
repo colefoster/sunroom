@@ -4,7 +4,7 @@ A free macOS menu-bar utility that puts a movable tint box over a bright part of
 
 Dark mode works until someone shares a bright window in Zoom or Teams. Sunroom lets you dim that area locally while the rest of your desktop stays as it is. Position the box by hand, then lock it so clicks pass through to the app underneath.
 
-[Download v0.1.0](https://github.com/colefoster/Sunglasses/releases/tag/v0.1.0) · [Try the web demo](https://astra-sunglasses-20261025.cole459637.chatgpt.site/)
+[Download v0.1.0](https://sunroom-593.pages.dev/#setup) · [Try the web demo](https://sunroom-593.pages.dev/)
 
 ## Requirements
 
@@ -16,7 +16,7 @@ The release is compiled for macOS 13+, with local runtime checks performed on ma
 
 ## Install
 
-1. Download `Sunroom-0.1.0.dmg` from the [release page](https://github.com/colefoster/Sunglasses/releases/tag/v0.1.0).
+1. Download `Sunroom-0.1.0.dmg` from the [website](https://sunroom-593.pages.dev/#setup).
 2. Open the disk image and drag **Sunroom** into **Applications**.
 3. Eject the disk image and launch Sunroom from Applications.
 4. Look for the **sun icon in the menu bar**. There is no Dock icon.
@@ -74,6 +74,8 @@ Run the native release checks on a logged-in Mac:
 These checks use a separate preferences domain and a temporary overlay. They verify native window behavior programmatically; they are not a complete OS/hardware compatibility matrix.
 
 ## Repository
+
+The public website and downloads are hosted on **Cloudflare Pages**. See [deployment instructions](docs/CLOUDFLARE_PAGES.md). The source repository's visibility is managed separately.
 
 - `Sunglasses/` — native macOS app and bundle metadata.
 - `scripts/` — universal build, packaging, and native checks.

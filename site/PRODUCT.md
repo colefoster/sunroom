@@ -4,6 +4,8 @@ Sunroom is a free macOS menu-bar utility. The source project and bundle ID retai
 
 Platform scope: macOS only. The experimental Windows port is deferred; do not advertise Windows support or downloads.
 
+Canonical hosting: public Cloudflare Pages at https://sunroom-593.pages.dev/. The GitHub repository remains private, so serve downloads and release notes directly from the site and omit inaccessible GitHub/source-build links. The earlier private ChatGPT Sites copy is separate.
+
 The motivation is specific: the owner uses dark mode throughout their Mac, but another person’s bright Zoom/Teams screen share cannot be switched to dark mode locally. The utility puts a manually adjusted translucent rectangle over that selected area while the rest of the desktop stays unchanged.
 
 Native facts from SunglassesApp.swift: RGB tint picker; 5–80% opacity; Amber/Blue/Gray presets; separate visibility and move/click-through behavior; always-on-top setting; all Spaces; geometry and settings stored locally. Initial tint is RGB .15/.10/0 at 30%; presets are Amber .2/.12/0 at30%, Blue 0/.05/.2 at25%, Gray .05/.05/.05 at35%.

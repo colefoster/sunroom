@@ -8,3 +8,5 @@ build/
 **/obj/
 windows/artifacts/
 site/dist/downloads/
+.wrangler/
+node_modules/
