@@ -4,7 +4,7 @@ A free macOS menu-bar utility that puts a movable tint box over a bright part of
 
 Dark mode works until someone shares a bright window in Zoom or Teams. Sunroom lets you dim that area locally while the rest of your desktop stays as it is. Position the box by hand, then lock it so clicks pass through to the app underneath.
 
-[Download v0.1.0](https://sunroom-593.pages.dev/#setup) · [Try the web demo](https://sunroom-593.pages.dev/)
+[Download v0.1.0](https://sunroom.colefoster.ca/#setup) · [Try the web demo](https://sunroom.colefoster.ca/)
 
 ## Requirements
 
@@ -16,7 +16,7 @@ The release is compiled for macOS 13+, with local runtime checks performed on ma
 
 ## Install
 
-1. Download `Sunroom-0.1.0.dmg` from the [website](https://sunroom-593.pages.dev/#setup).
+1. Download `Sunroom-0.1.0.dmg` from the [website](https://sunroom.colefoster.ca/#setup).
 2. Open the disk image and drag **Sunroom** into **Applications**.
 3. Eject the disk image and launch Sunroom from Applications.
 4. Look for the **sun icon in the menu bar**. There is no Dock icon.

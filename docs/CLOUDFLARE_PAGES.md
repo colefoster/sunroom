@@ -1,6 +1,10 @@
 # Cloudflare Pages
 
-The canonical public website is **https://sunroom-593.pages.dev/**.
+The canonical public website is **https://sunroom.colefoster.ca/**.
+
+The Pages origin, https://sunroom-593.pages.dev/, remains available. The custom domain uses the same deployment and downloads; it does not proxy through ash.
+
+The Pages project binds `sunroom.colefoster.ca`; its proxied CNAME points to `sunroom-593.pages.dev`. Cloudflare manages the TLS certificate. Keep both the Pages domain binding and DNS record when changing deployments.
 
 - Account-owned Cloudflare Pages project: `sunroom`.
 - Production branch: `main`; direct-upload output: `site/dist/`.

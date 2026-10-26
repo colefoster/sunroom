@@ -4,7 +4,7 @@ Sunroom is a free macOS menu-bar utility. The source project and bundle ID retai
 
 Platform scope: macOS only. The experimental Windows port is deferred; do not advertise Windows support or downloads.
 
-Canonical hosting: public Cloudflare Pages at https://sunroom-593.pages.dev/. The GitHub repository remains private, so serve downloads and release notes directly from the site and omit inaccessible GitHub/source-build links. The earlier private ChatGPT Sites copy is separate.
+Canonical hosting: public Cloudflare Pages at https://sunroom.colefoster.ca/ (Pages origin: https://sunroom-593.pages.dev/). The GitHub repository remains private, so serve downloads and release notes directly from the site and omit inaccessible GitHub/source-build links. The earlier private ChatGPT Sites copy is separate.
 
 The motivation is specific: the owner uses dark mode throughout their Mac, but another person’s bright Zoom/Teams screen share cannot be switched to dark mode locally. The utility puts a manually adjusted translucent rectangle over that selected area while the rest of the desktop stays unchanged.
 
