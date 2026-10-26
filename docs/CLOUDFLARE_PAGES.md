@@ -10,11 +10,11 @@ The Pages project binds `sunroom.colefoster.ca`; its proxied CNAME points to `su
 - Production branch: `main`; direct-upload output: `site/dist/`.
 - Downloads are ordinary Pages assets, not redirects to GitHub or ChatGPT Sites.
 - Public release notes: `/release-notes.html`.
-- The GitHub repository remains private. The public page therefore omits source and private GitHub release links.
+- The GitHub repository is public; the page links to it as "Source".
 
 ## Deploy an update
 
-From the repository root, with GitHub CLI access to the release and Cloudflare Wrangler access to the project:
+Push to `main` (changes under `site/`) or publish a release: `.github/workflows/pages.yml` runs `prepare-site-downloads.sh` and deploys `site/dist/` with Wrangler. A manual run is also available (workflow_dispatch). To deploy by hand from the repository root instead:
 
 ```sh
 ./scripts/prepare-site-downloads.sh
@@ -23,7 +23,7 @@ npx wrangler@4.153.0 pages deploy site/dist --project-name sunroom --branch main
 
 Use `npx wrangler@4.153.0 login` for an operator's ordinary Wrangler login. For non-interactive deployment, supply `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` through the environment. The token needs **Account → Cloudflare Pages → Edit**. Keep credentials out of the repository.
 
-The initial deployment used a temporary Pages-only token, revoked after upload. No deployment credential is stored in this repository.
+The workflow uses the repository secrets `CLOUDFLARE_API_TOKEN` (Pages Write only) and `CLOUDFLARE_ACCOUNT_ID`. No deployment credential is stored in the repository itself.
 
 `prepare-site-downloads.sh` fetches the exact versioned DMG, ZIP, and checksums from the GitHub release, then verifies them. Binary downloads are ignored by Git; prepare them before every deployment from a fresh checkout. Do not substitute a newly rebuilt DMG under an existing release version.
 

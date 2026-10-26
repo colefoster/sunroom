@@ -54,7 +54,7 @@ The native app makes no network requests, captures no screen content, and contai
 Install Apple’s Command Line Tools (`xcode-select --install`), then:
 
 ```sh
-git clone https://github.com/colefoster/Sunglasses.git
+git clone https://github.com/colefoster/sunroom.git
 cd Sunglasses
 ./scripts/build-macos.sh
 ```

@@ -1,0 +1,24 @@
+name: pages
+# Deploys site/dist to Cloudflare Pages (sunroom.colefoster.ca) on a push to main that touches the
+# site, or when a release is published. Downloads come from the matching GitHub release.
+on:
+  push:
+    branches: [main]
+    paths: ["site/**", "scripts/prepare-site-downloads.sh", "Sunglasses/Info.plist", ".github/workflows/pages.yml"]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/prepare-site-downloads.sh
+        env:
+          GH_TOKEN: ${{ github.token }}
+      - uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy site/dist --project-name sunroom --branch main
