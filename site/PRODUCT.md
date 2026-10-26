@@ -1,6 +1,6 @@
 # Sunroom
 
-Sunroom is the website identity for the existing Sunglasses macOS menu-bar utility. It is currently free to use. The source and native menu still call it Sunglasses. No packaged download is verified, so the page gives Xcode/source-build instructions rather than a download or purchase flow.
+Sunroom is a free macOS menu-bar utility. The source project and bundle ID retain the original Sunglasses name to preserve existing preferences; the app and menu use Sunroom. Version 0.1.0 has a universal Apple Silicon/Intel DMG and ZIP for macOS 13+. The initial release is ad-hoc signed and not notarized; explain the first-launch steps honestly. Offer the download, checksums, release notes, and source build instructions.
 
 Platform scope: macOS only. The experimental Windows port is deferred; do not advertise Windows support or downloads.
 

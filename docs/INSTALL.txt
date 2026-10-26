@@ -1,0 +1,17 @@
+Sunroom 0.1.0 — macOS 13 or later, Apple Silicon and Intel
+
+Drag Sunroom.app to Applications. Eject this disk image, then open Sunroom
+from Applications. Look for the sun icon in your menu bar; there is no Dock icon.
+
+This initial release is ad-hoc signed, not Developer ID signed or notarized.
+macOS may block the first launch because Apple has not verified its developer.
+If you trust this download, try opening it once, then open System Settings >
+Privacy & Security and choose Open Anyway. Confirm the prompt. Managed Macs
+may not permit this. Do not disable Gatekeeper to install Sunroom.
+
+Use Unlock · Move & Resize to place the tint box. Return to the sun icon and
+choose Lock · Click Through when done. Show/hide is independent of locking.
+Quit from the sun menu to stop the overlay.
+
+Source, release files and checksums:
+https://github.com/colefoster/Sunglasses/releases/tag/v0.1.0

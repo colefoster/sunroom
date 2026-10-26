@@ -1,6 +1,6 @@
 # Windows verification — 2026-10-25
 
-Test host: colepc, Windows 11 build 26200, interactive console session 1.
+Test host: a desktop PC, Windows 11 build 26200, interactive console session 1.
 Built with the installed .NET SDK 9.0.301. The published x64 executable includes .NET / Windows Desktop 8.0.33.
 
 ## Completed
@@ -14,6 +14,6 @@ Built with the installed .NET SDK 9.0.301. The published x64 executable includes
 
 Later full-suite reruns were interrupted by active mouse/focus changes from Overwatch and Discord. Input automation stopped; an uninterrupted rerun is pending an idle-mouse window. The previously completed input assertions and final package checks are recorded separately rather than claiming the interrupted full run passed.
 
-Machine-local raw results and screenshots: `windows/artifacts/test-results/` (ignored by Git); the PC retains them at `C:\Users\cole\Dev\sunroom-windows\test-results`.
+Machine-local raw results and screenshots: `windows/artifacts/test-results/` (ignored by Git); the PC retains them under the local Windows checkout’s `test-results` folder.
 
 Installed to `%LOCALAPPDATA%\Sunroom\Sunroom.exe`, with a Start menu shortcut. Left running in the tray with tint hidden and locked.

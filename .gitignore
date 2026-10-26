@@ -1,8 +1,10 @@
 # Build artifacts
 Sunglasses.app/
+Sunroom.app/
 .DS_Store
 build/
 *.swp
 **/bin/
 **/obj/
 windows/artifacts/
+site/dist/downloads/
