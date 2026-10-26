@@ -1,5 +1,7 @@
 # Sunroom for Windows
 
+**Status: deferred experiment.** Sunroom is macOS-only for now. This port is retained for future work and is not part of the current release or website offering.
+
 A small native Windows tray utility, based on the macOS Sunglasses app in this repository.
 Place a translucent rectangle over a bright shared screen. Lock it to let clicks pass through to the app below.
 
